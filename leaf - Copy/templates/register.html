@@ -1,0 +1,96 @@
+<html>
+    <body>      
+    <h2>Registration</h2>
+    <style>
+        body{
+            
+            background-image: url("https://www.livelaw.in/cms/wp-content/uploads/2015/04/NRI-Voting-Rights.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            justify-content: right;
+            align-items:right;
+            height: 100vh;
+            margin: 0;
+        }
+        
+    </style>
+    <form action="/register" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <label for="upload_photo">Upload Your Photo:</label>
+        <input type="file" id="upload_photo" name="photo" accept="image/*" required>
+        <br>
+        <button type="submit">Register</button>
+    </form>
+    <form action="/process" method="post"></form>
+    <h2>Face Authentication</h2>
+    <video id="video" width="640" height="480" autoplay></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <button id="capture">Capture</button>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture');
+        const constraints = {
+            video: true
+        };
+
+        // Access webcam and stream video
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                handleSuccess(stream);
+            } catch (e) {
+                console.error('Error accessing webcam: ', e);
+            }
+        }
+
+        function handleSuccess(stream) {
+            window.stream = stream;
+            video.srcObject = stream;
+        }
+
+        // Capture photo from video stream
+        captureButton.addEventListener('click', function() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const photo = canvas.toDataURL('image/png');
+            // Send the captured photo for facial recognition
+            // You can send it via AJAX to the server for processing
+            savePhoto(photo);
+        });
+        function savePhoto(photoData) {
+    // Convert data URL to Blob
+    const byteCharacters = atob(photoData.split(',')[1]);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        const slice = byteCharacters.slice(offset, offset + 512);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, { type: 'image/png' });
+
+    // Create a temporary link element to trigger the download
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'captured_photo.png';
+    link.click();
+}
+
+        // Initialize camera when the page loads
+        initCamera();
+    </script>
+    </body>
+</html>

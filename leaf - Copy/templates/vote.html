@@ -1,0 +1,36 @@
+<html>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <body>
+        <h2>Vote</h2>
+        <style>
+            body{
+                
+                background-image: url("https://images.thequint.com/thequint%2F2020-01%2Fed7e4fc3-d193-4a35-96a9-21db7e362c27%2FiStock_506758551.jpg?rect=0%2C0%2C743%2C418");
+                background-repeat: no-repeat;
+                background-size: cover;
+                justify-content: right;
+                align-items:right;
+                height: 100vh;
+                margin: 0;
+            }
+            
+        </style>
+    <form action="/vote" method="post">
+        <label for="candidate">Choose Candidate:</label>
+        <select id="candidate" name="candidate" required>
+            <i class='bx bx-user-circle'></i>
+            <option value="candidate1">TVK</option>
+            <option value="candidate2">BJP</option>
+            <option value="candidate3">NTK</option>
+            <option value="candidate3">ADMK</option>
+            <!-- Add more options for other candidates -->
+        </select>
+        <br>
+        <label for="authenticate_photo">Authenticate with Your Photo:</label>
+        <input type="file" id="authenticate_photo" name="photo" accept="image/*" required>
+        <i class='bx bxs-image-add'></i>
+        <br>
+        <button type="submit">Vote</button>
+    </form>
+    </body>
+</html>
